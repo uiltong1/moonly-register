@@ -21,7 +21,7 @@ import br.com.moonlyRegister.vo.PersonVOV2;
 
 // @CrossOrigin(origins = {"http://localhost:8080"})
 @RestController
-@RequestMapping("/person")
+@RequestMapping("api/v1/person")
 public class PersonController {
 
 	@Autowired
