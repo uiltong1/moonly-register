@@ -17,7 +17,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import br.com.moonlyRegister.service.BookService;
 import br.com.moonlyRegister.vo.BookVO;
 
-@RequestMapping("/v1/book")
+@RequestMapping("/api/v1/book")
 @RestController
 public class BookController {
 

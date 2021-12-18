@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import br.com.moonlyRegister.exception.ExceptionResponseEntity;
 import br.com.moonlyRegister.exception.GenericException;
+import br.com.moonlyRegister.exception.InvalidJwtAuthenticationException;
 
 @ControllerAdvice
 @RestController
@@ -26,6 +27,14 @@ public class CustomizedResponseEntity extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(GenericException.class)
 	public final ResponseEntity<ExceptionResponseEntity> handlerGenericException(Exception ex, WebRequest request) {
+		ExceptionResponseEntity exceptionResponseEntity = new ExceptionResponseEntity(ex.getMessage(),
+				request.getDescription(false), new Date());
+		return new ResponseEntity<ExceptionResponseEntity>(exceptionResponseEntity, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(InvalidJwtAuthenticationException.class)
+	public final ResponseEntity<ExceptionResponseEntity> InvalidJwtAuthenticationException(Exception ex,
+			WebRequest request) {
 		ExceptionResponseEntity exceptionResponseEntity = new ExceptionResponseEntity(ex.getMessage(),
 				request.getDescription(false), new Date());
 		return new ResponseEntity<ExceptionResponseEntity>(exceptionResponseEntity, HttpStatus.BAD_REQUEST);
