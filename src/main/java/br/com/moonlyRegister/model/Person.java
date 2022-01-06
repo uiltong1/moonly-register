@@ -36,6 +36,9 @@ public class Person implements Serializable {
 	@Column(nullable = true)
 	private Date birthday;
 
+	@Column(nullable = false)
+	private Boolean enabled;
+
 	public Long getId() {
 		return id;
 	}
@@ -84,9 +87,17 @@ public class Person implements Serializable {
 		this.birthday = birthday;
 	}
 
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(address, birthday, firstname, gender, id, lastname);
+		return Objects.hash(address, birthday, enabled, firstname, gender, id, lastname);
 	}
 
 	@Override
@@ -99,8 +110,10 @@ public class Person implements Serializable {
 			return false;
 		Person other = (Person) obj;
 		return Objects.equals(address, other.address) && Objects.equals(birthday, other.birthday)
-				&& Objects.equals(firstname, other.firstname) && Objects.equals(gender, other.gender)
-				&& Objects.equals(id, other.id) && Objects.equals(lastname, other.lastname);
+				&& Objects.equals(enabled, other.enabled) && Objects.equals(firstname, other.firstname)
+				&& Objects.equals(gender, other.gender) && Objects.equals(id, other.id)
+				&& Objects.equals(lastname, other.lastname);
 	}
+
 
 }

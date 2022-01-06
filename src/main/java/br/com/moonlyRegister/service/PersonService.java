@@ -1,9 +1,11 @@
 package br.com.moonlyRegister.service;
 
-import java.util.List;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.moonlyRegister.exception.GenericException;
@@ -20,10 +22,16 @@ public class PersonService {
 	@Autowired
 	private PersonRepository personRepository;
 
-	public List<PersonVO> index() {
-		return DozerConverter.parseListObjects(personRepository.findAll(), PersonVO.class);
+	public Page<PersonVO> index(Pageable pageable) {
+		var page = personRepository.findAll(pageable);
+		return page.map(this::convertToPersonVo);
 	}
 
+	public Page<PersonVO> findPersonByName(String firstname, Pageable pageable) {
+		var page = personRepository.findPersonByName(firstname, pageable);
+		return page.map(this::convertToPersonVo);
+	}
+	
 	public PersonVO get(Long id) {
 		var person = personRepository.findById(id).orElseThrow(
 				() -> new GenericException(String.format("Pessoa com o código %s não foi encontrada.", id)));
@@ -48,8 +56,29 @@ public class PersonService {
 		return DozerConverter.parseObject(personRepository.save(personExist), PersonVO.class);
 	}
 
+	@Transactional
+	public PersonVO disablePerson(Long id) {
+		personRepository.disablePerson(id);
+		var person = personRepository.findById(id).orElseThrow(
+				() -> new GenericException(String.format("Pessoa com o código %s não foi encontrada.", id)));
+		return DozerConverter.parseObject(person, PersonVO.class);
+	}
+
+	@Transactional
+	public PersonVO enablePerson(Long id) {
+		personRepository.enablePerson(id);
+		var person = personRepository.findById(id).orElseThrow(
+				() -> new GenericException(String.format("Pessoa com o código %s não foi encontrada.", id)));
+		return DozerConverter.parseObject(person, PersonVO.class);
+	}
+
 	public void delete(Long id) {
 		Person person = personRepository.findById(id).orElseThrow();
 		personRepository.delete(person);
 	}
+
+	private PersonVO convertToPersonVo(Person person) {
+		return DozerConverter.parseObject(person, PersonVO.class);
+	}
+
 }

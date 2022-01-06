@@ -1,9 +1,9 @@
 package br.com.moonlyRegister.service;
 
-import java.util.List;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.moonlyRegister.exception.GenericException;
@@ -18,8 +18,14 @@ public class BookService {
 	@Autowired
 	private BookRepository bookRepository;
 
-	public List<BookVO> index() {
-		return DozerConverter.parseListObjects(bookRepository.findAll(), BookVO.class);
+	public Page<BookVO> index(Pageable pageable) {
+		var page = bookRepository.findAll(pageable);
+		return page.map(this::convertToBookVO);
+	}
+
+	public Page<BookVO> findBookByTitle(String title, Pageable pageable) {
+		var page = bookRepository.findBookByTitle(title, pageable);
+		return page.map(this::convertToBookVO);
 	}
 
 	public BookVO get(Long id) {
@@ -46,6 +52,10 @@ public class BookService {
 		Book book = bookRepository.findById(id).orElseThrow(
 				() -> new GenericException(String.format("Não foi possível encontrar livro com o código %s.", id)));
 		bookRepository.delete(book);
+	}
+
+	private BookVO convertToBookVO(Book book) {
+		return DozerConverter.parseObject(book, BookVO.class);
 	}
 
 }

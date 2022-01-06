@@ -9,7 +9,7 @@ import com.github.dozermapper.core.Mapping;
 
 import org.springframework.hateoas.RepresentationModel;
 
-@JsonPropertyOrder({ "id", "firstname", "lastname", "gender", "address" })
+@JsonPropertyOrder({ "id", "firstname", "lastname", "gender", "address", "enabled" })
 public class PersonVO extends RepresentationModel<PersonVO> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -25,6 +25,8 @@ public class PersonVO extends RepresentationModel<PersonVO> implements Serializa
 	private String gender;
 
 	private String address;
+
+	private Boolean enabled;
 
 	public Long getKey() {
 		return key;
@@ -66,23 +68,34 @@ public class PersonVO extends RepresentationModel<PersonVO> implements Serializa
 		this.address = address;
 	}
 
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(address, firstname, gender, key, lastname);
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(address, enabled, firstname, gender, key, lastname);
+		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		PersonVO other = (PersonVO) obj;
-		return Objects.equals(address, other.address) && Objects.equals(firstname, other.firstname)
-				&& Objects.equals(gender, other.gender) && Objects.equals(key, other.key)
-				&& Objects.equals(lastname, other.lastname);
+		return Objects.equals(address, other.address) && Objects.equals(enabled, other.enabled)
+				&& Objects.equals(firstname, other.firstname) && Objects.equals(gender, other.gender)
+				&& Objects.equals(key, other.key) && Objects.equals(lastname, other.lastname);
 	}
 
 }
